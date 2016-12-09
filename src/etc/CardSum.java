@@ -1,4 +1,4 @@
-package codeground.easy;
+package etc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +31,7 @@ Winner : Player2
  * @author HJS
  *
  */
-public class NTS_problem {
+public class CardSum {
 
 	// final을 사용한 이유
 	// i++말고 ++i를 사용한 이유
@@ -44,49 +44,23 @@ public class NTS_problem {
 	
 	public static final int NUM_OF_PLAYER = 4;
 	
-	// deck과 player들 생성
 	public static Card[] deck = new Card[NUM_OF_DECK];
 	public static Player[] playerList = new Player[NUM_OF_PLAYER];
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Player winner = null;
-		// 카드 52장의 타입과 값을 생성
 		generateCard();
-		// 플레이어 초기화
 		generatePlayer();
 		do {
-			// 카드분배, 합
 			deal();
-			// 플레이어가 가진 카드의 합 출력
 			printPlayerCardList();
-			// 승자 계산
 			winner = findWinner();
 		} while(winner == null);
-		// 만약 승자가 없다면 게임을 다시 시작
 		
-		// 승자 출력
 		StringBuilder sb = new StringBuilder("Winner : ");
 		System.out.println(sb.append(winner.getPlayerName()));
 	}
-	
-//	public static void main(String[] args) {
-//		// TODO Auto-generated method stub
-//		Player winner = null;
-//		// 카드 52장의 타입과 값을 생성
-//		generateCard();
-//		// 플레이어 초기화
-//		generatePlayer();
-//		do {
-//			// 카드분배, 합, 승자 계산
-//			winner = dealAndSetWinner();
-//		} while(winner == null);
-//		// 만약 승자가 없다면 게임을 다시 시작
-//		
-//		// 승자 출력
-//		StringBuilder sb = new StringBuilder("Winner : ");
-//		System.out.println(sb.append(winner.getPlayerName()));
-//	}
 	
 	/**
 	 * generate player
@@ -113,15 +87,12 @@ public class NTS_problem {
 	 * deal
 	 */
 	public static void deal() {
-		// 분배된 카드인지 판단하는 곳
 		boolean[] visitedDeck = new boolean[NUM_OF_DECK];
 		
 		for (Player player : playerList) {
 			while (!player.isFullCardList()) {
-				// 1~52사이의 랜덤값 생성
 				double randomValue = Math.random();
 				int cardIndex = (int)(randomValue * NUM_OF_DECK);
-				// 분배된 카드라면 다시 랜덤값 생성
 				if (visitedDeck[cardIndex]) {
 					continue;
 				}
@@ -160,81 +131,25 @@ public class NTS_problem {
 	 */
 	public static Player findWinner() {
 		Player winner = null;
-		// 각 플레이어 점수 정렬 어레이
 		int[] scoreArray = new int[playerList.length];
 
 		for (int i = 0; i < scoreArray.length; ++i) {
 			scoreArray[i] = playerList[i].getSum();
 		}
 
-		// 오름차순 정렬
 		Arrays.sort(scoreArray);
 
-		// 승자 도출
 		for (Player player : playerList) {
-			if (scoreArray[0] != scoreArray[1]) { // 동점자가 없으므로
-				if (scoreArray[0] == player.getSum()) { // 해당 최소점수 플레이어를 찾아서 승자로 연결
+			if (scoreArray[0] != scoreArray[1]) {
+				if (scoreArray[0] == player.getSum()) {
 					winner = player;
 					break;
 				}
-			} else { // 동점자가 있다는 말이므로 재경기를 위해 플레이어의 카드와 sum을 비움
+			} else {
 				player.removeCardList();
 			}
 		}
 
-		return winner;
-	}
-	
-	/**
-	 * deal, and print, set winner
-	 * @return winner
-	 */
-	public static Player dealAndSetWinner() {
-		Player winner = null;
-
-		// 분배된 카드인지 판단하는 곳
-		boolean[] visitedDeck = new boolean[NUM_OF_DECK];
-
-		// 플레이어에게 카드분배
-		for (Player player : playerList) {
-			while (!player.isFullCardList()) {
-				// 1~52사이의 랜덤값 생성
-				double randomValue = Math.random();
-				int cardIndex = (int) (randomValue * NUM_OF_DECK);
-				// 분배된 카드라면 다시 생성
-				if (visitedDeck[cardIndex]) {
-					continue;
-				}
-				player.getCardList().add(deck[cardIndex]);
-				visitedDeck[cardIndex] = true;
-			}
-		}
-		
-		// 출력
-		printPlayerCardList();
-
-		// 각 플레이어 점수 정렬 어레이
-		int[] scoreArray = new int[playerList.length];
-		
-		for (int i = 0; i < scoreArray.length; ++i) {
-			scoreArray[i] = playerList[i].getSum();
-		}
-		
-		// 오름차순 정렬
-		Arrays.sort(scoreArray);
-		
-		// 승자 도출
-		for (Player player : playerList) {
-			if (scoreArray[0] != scoreArray[1]) { // 동점자가 없으므로
-				if (scoreArray[0] == player.getSum()) { // 해당 최소점수 플레이어를 찾아서 승자로 연결
-					winner = player;
-					break;
-				}
-			} else { // 동점자가 있다는 말이므로 재경기를 위해 플레이어의 카드와 sum을 비움
-				player.removeCardList();
-			}
-		}
-		
 		return winner;
 	}
 	
