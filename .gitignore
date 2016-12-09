@@ -1,2 +1,17 @@
+
+### input files ###
 *.txt
-*.class
+
+### Eclipse ###
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+
+### Eclipse Core ###s
+.project
